@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SPORE AI — Mushroom Safety Intelligence</title>
+<meta name="description" content="SPORE AI goes beyond identification. Scan any mushroom and get instant toxicity assessment, personalized exposure analysis, and symptom timelines that could save a life.">
+<meta name="theme-color" content="#06090A">
+
+<!-- Open Graph -->
+<meta property="og:title" content="SPORE AI — Mushroom Safety Intelligence">
+<meta property="og:description" content="Scan any mushroom and get instant toxicity assessment, personalized exposure analysis, and symptom timelines.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="assets/og-image.png">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="SPORE AI — Mushroom Safety Intelligence">
+<meta name="twitter:description" content="Scan any mushroom and get instant toxicity assessment, personalized exposure analysis, and symptom timelines.">
+
+<!-- Favicon -->
+<link rel="icon" type="image/svg+xml" href="assets/spore-mark-green.svg">
+<link rel="apple-touch-icon" href="assets/spore-mark-green.svg">
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<!-- Preload hero images -->
+<link rel="preload" as="image" href="assets/screen-home.png">
+
+<style>
+/* ============================================================
+   SPORE DESIGN SYSTEM — TOKENS (inlined for production)
+   ============================================================ */
+
+/* --- Colors --- */
+:root {
+  --ink-950: #06090A;
+  --ink-900: #0A0F0E;
+  --ink-850: #0F1514;
+  --ink-800: #141B19;
+  --ink-750: #19211F;
+  --ink-700: #212B28;
+  --ink-600: #2C3833;
+  --ink-500: #3C4944;
+  --ink-400: #5A6862;
+  --ink-300: #7E8C86;
+  --ink-200: #A8B4AE;
+  --ink-100: #D6DEDA;
+  --ink-50:  #ECF1EE;
+  --ink-0:   #F8FBF9;
+
+  --spore-700: #1F7D5E;
+  --spore-600: #2FA878;
+  --spore-500: #46E5B0;
+  --spore-400: #6BEDC1;
+  --spore-300: #95F3D4;
+  --spore-glow: #46E5B0;
+
+  --tox-0:  #3FB873;
+  --tox-1:  #E8B341;
+  --tox-2:  #E8823C;
+  --tox-3:  #E5533D;
+  --tox-4:  #E0394B;
+
+  --tox-0-soft: rgba(63, 184, 115, 0.14);
+  --tox-1-soft: rgba(232, 179, 65, 0.14);
+  --tox-2-soft: rgba(232, 130, 60, 0.14);
+  --tox-3-soft: rgba(229, 83, 61, 0.15);
+  --tox-4-soft: rgba(224, 57, 75, 0.16);
+
+  --info-500: #5B92F0;
+  --info-soft: rgba(91, 146, 240, 0.14);
+
+  --glass-fill: rgba(22, 30, 28, 0.62);
+  --glass-fill-strong: rgba(16, 22, 20, 0.82);
+  --glass-stroke: rgba(255, 255, 255, 0.08);
+  --glass-stroke-strong: rgba(255, 255, 255, 0.14);
+  --glass-highlight: rgba(255, 255, 255, 0.06);
+  --scrim: rgba(4, 7, 6, 0.72);
+
+  --bg-app: var(--ink-950);
+  --bg-canvas: var(--ink-900);
+  --bg-sheet: var(--ink-850);
+
+  --surface-card: var(--ink-800);
+  --surface-card-raised: var(--ink-750);
+  --surface-input: var(--ink-700);
+  --surface-glass: var(--glass-fill);
+  --surface-glass-strong: var(--glass-fill-strong);
+
+  --border-hairline: var(--glass-stroke);
+  --border-strong: var(--glass-stroke-strong);
+  --border-divider: rgba(255, 255, 255, 0.06);
+
+  --text-primary: var(--ink-50);
+  --text-body: var(--ink-100);
+  --text-secondary: var(--ink-200);
+  --text-muted: var(--ink-300);
+  --text-faint: var(--ink-400);
+  --text-on-accent: #04201A;
+
+  --accent: var(--spore-500);
+  --accent-hover: var(--spore-400);
+  --accent-press: var(--spore-600);
+  --accent-quiet: rgba(70, 229, 176, 0.12);
+
+  --risk-low: var(--tox-0);
+  --risk-moderate: var(--tox-1);
+  --risk-high: var(--tox-3);
+  --risk-critical: var(--tox-4);
+
+  --danger: var(--tox-4);
+  --danger-soft: var(--tox-4-soft);
+  --warning: var(--tox-1);
+  --success: var(--tox-0);
+  --info: var(--info-500);
+
+  /* --- Typography --- */
+  --font-sans: 'Hanken Grotesk', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-serif: 'Newsreader', Georgia, 'Times New Roman', serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --fw-light: 300;
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+  --fw-heavy: 800;
+
+  --fs-display-xl: 44px;
+  --fs-display-l: 34px;
+  --fs-display-m: 28px;
+  --fs-title-l: 22px;
+  --fs-title-m: 19px;
+  --fs-body-l: 17px;
+  --fs-body-m: 15px;
+  --fs-label: 13px;
+  --fs-caption: 12px;
+  --fs-micro: 11px;
+
+  --lh-tight: 1.04;
+  --lh-snug: 1.18;
+  --lh-normal: 1.38;
+  --lh-relaxed: 1.55;
+
+  --ls-tighter: -0.03em;
+  --ls-tight: -0.015em;
+  --ls-normal: 0em;
+  --ls-wide: 0.04em;
+  --ls-eyebrow: 0.14em;
+
+  /* --- Spacing --- */
+  --space-0: 0px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 32px;
+  --space-8: 40px;
+  --space-9: 48px;
+  --space-10: 64px;
+  --space-11: 80px;
+  --space-12: 96px;
+
+  --screen-gutter: 20px;
+  --hit-min: 44px;
+
+  /* --- Effects --- */
+  --radius-xs: 8px;
+  --radius-sm: 12px;
+  --radius-md: 16px;
+  --radius-lg: 20px;
+  --radius-xl: 24px;
+  --radius-2xl: 32px;
+  --radius-pill: 999px;
+
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.4);
+  --shadow-md: 0 8px 24px -8px rgba(0,0,0,0.55);
+  --shadow-lg: 0 20px 50px -16px rgba(0,0,0,0.65);
+  --shadow-xl: 0 32px 80px -20px rgba(0,0,0,0.72);
+  --shadow-sheet: 0 -24px 60px -12px rgba(0,0,0,0.6);
+
+  --inset-highlight: inset 0 1px 0 rgba(255,255,255,0.06);
+
+  --glow-spore: 0 0 0 1px rgba(70,229,176,0.4), 0 8px 30px -6px rgba(70,229,176,0.45);
+  --glow-spore-soft: 0 0 40px -8px rgba(70,229,176,0.4);
+  --glow-danger: 0 0 40px -6px rgba(224,57,75,0.5);
+
+  --grad-app: radial-gradient(120% 80% at 50% -10%, #0E1A16 0%, #06090A 60%);
+  --grad-spore: linear-gradient(135deg, #6BEDC1 0%, #46E5B0 45%, #2FA878 100%);
+  --grad-danger: linear-gradient(135deg, #E5533D 0%, #E0394B 100%);
+
+  --glass-shadow: var(--shadow-lg), var(--inset-highlight);
+}
+
+/* ============================================================
+   SPORE AI · Landing Page Styles
+   ============================================================ */
+*,*::before,*::after{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg-app);color:var(--text-body);font-family:var(--font-sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+
+/* ---- Layout ---- */
+.container{max-width:1140px;margin:0 auto;padding:0 28px}
+.section{padding:120px 0}
+@media(max-width:768px){.section{padding:80px 0}.container{padding:0 20px}}
+
+/* ---- Nav ---- */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:18px 0;transition:background .3s,backdrop-filter .3s}
+.nav--scrolled{background:rgba(6,9,10,.82);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border-hairline)}
+.nav .container{display:flex;align-items:center;justify-content:space-between}
+.nav__logo{display:flex;align-items:center;gap:10px;color:var(--spore-500);font-weight:800;font-size:16px;letter-spacing:.18em}
+.nav__logo svg{width:28px;height:28px}
+.nav__logo span{color:#fff}
+.nav__links{display:flex;align-items:center;gap:32px}
+.nav__links a{font-size:15px;font-weight:500;color:var(--text-secondary);transition:color .2s}
+.nav__links a:hover{color:var(--text-primary)}
+.nav__cta{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:var(--radius-pill);background:var(--grad-spore);color:var(--text-on-accent);font-weight:700;font-size:14px;transition:transform .14s,box-shadow .2s;box-shadow:var(--glow-spore)}
+.nav__cta:hover{box-shadow:var(--glow-spore),0 0 50px -6px rgba(70,229,176,.5)}
+.nav__cta:active{transform:scale(.97)}
+@media(max-width:768px){.nav__links{gap:18px}.nav__links a:not(.nav__cta){display:none}}
+
+/* ---- Hero ---- */
+.hero{position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden;padding:100px 0 60px}
+.hero__bg{position:absolute;inset:0;z-index:0}
+.hero__bg::before{content:'';position:absolute;inset:0;background:radial-gradient(70% 50% at 60% 30%,rgba(70,229,176,.08),transparent 70%)}
+.hero__bg::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(6,9,10,.3),var(--bg-app) 92%)}
+.hero .container{position:relative;z-index:2;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.hero__copy{max-width:560px}
+.hero__eyebrow{display:inline-flex;align-items:center;gap:8px;padding:8px 16px 8px 12px;border-radius:var(--radius-pill);background:var(--accent-quiet);border:1px solid rgba(70,229,176,.2);font-size:13px;font-weight:600;color:var(--spore-400);margin-bottom:28px}
+.hero__eyebrow svg{width:16px;height:16px}
+.hero__h1{font-size:clamp(40px,5.5vw,72px);font-weight:800;line-height:1.02;letter-spacing:-.04em;color:#fff;margin-bottom:22px}
+.hero__h1 em{font-style:normal;color:var(--spore-400)}
+.hero__sub{font-size:clamp(17px,2vw,20px);line-height:1.55;color:var(--text-secondary);max-width:42ch;margin-bottom:36px}
+.hero__actions{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.hero__btn{display:inline-flex;align-items:center;gap:10px;padding:16px 28px;border-radius:var(--radius-md);font-weight:700;font-size:17px;transition:transform .14s,box-shadow .2s;cursor:pointer;border:0}
+.hero__btn--primary{background:var(--grad-spore);color:var(--text-on-accent);box-shadow:var(--glow-spore)}
+.hero__btn--primary:hover{box-shadow:var(--glow-spore),0 0 60px -6px rgba(70,229,176,.5)}
+.hero__btn--primary:active{transform:scale(.97)}
+.hero__btn--secondary{background:var(--surface-glass-strong);color:var(--text-primary);border:1px solid var(--border-strong);backdrop-filter:blur(16px)}
+.hero__btn--secondary:hover{background:rgba(255,255,255,.06)}
+.hero__btn--secondary:active{transform:scale(.97)}
+.hero__phone{position:relative;display:flex;justify-content:center}
+.hero__device{width:320px;height:692px;border-radius:46px;background:#000;box-shadow:0 0 0 10px #0c0f0e,0 0 0 11px #2a302d,0 50px 120px -30px rgba(0,0,0,.85);overflow:hidden;position:relative}
+.hero__device img{width:100%;height:100%;object-fit:cover}
+.hero__device::before{content:'';position:absolute;top:10px;left:50%;transform:translateX(-50%);width:100px;height:30px;background:#000;border-radius:16px;z-index:5}
+.hero__device::after{content:'';position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:120px;height:5px;border-radius:3px;background:rgba(255,255,255,.25);z-index:5}
+.hero__glow{position:absolute;top:10%;left:50%;transform:translateX(-50%);width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(70,229,176,.2),transparent 70%);filter:blur(40px);pointer-events:none}
+@media(max-width:900px){.hero .container{grid-template-columns:1fr;text-align:center}.hero__copy{margin:0 auto}.hero__actions{justify-content:center}.hero__phone{margin-top:40px}.hero__device{width:260px;height:563px;border-radius:38px}}
+
+/* ---- Proof bar ---- */
+.proof{border-top:1px solid var(--border-divider);border-bottom:1px solid var(--border-divider);padding:32px 0}
+.proof .container{display:flex;align-items:center;justify-content:center;gap:48px;flex-wrap:wrap}
+.proof__item{display:flex;align-items:center;gap:10px;color:var(--text-muted);font-size:14px;font-weight:500}
+.proof__item b{font-family:var(--font-mono);font-size:22px;font-weight:700;color:var(--text-primary)}
+
+/* ---- Features ---- */
+.features .container{text-align:center}
+.features__h2{font-size:clamp(32px,4vw,52px);font-weight:800;letter-spacing:-.035em;color:#fff;margin-bottom:14px}
+.features__sub{font-size:18px;color:var(--text-secondary);margin-bottom:64px;max-width:50ch;margin-left:auto;margin-right:auto}
+.features__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.feature-card{background:var(--surface-card);border:1px solid var(--border-hairline);border-radius:var(--radius-xl);padding:36px 28px;text-align:left;box-shadow:var(--shadow-lg),var(--inset-highlight);transition:border-color .2s,transform .2s}
+.feature-card:hover{border-color:var(--border-strong);transform:translateY(-4px)}
+.feature-card__ic{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:20px}
+.feature-card__h{font-size:20px;font-weight:700;color:var(--text-primary);margin-bottom:8px}
+.feature-card__p{font-size:15px;line-height:1.55;color:var(--text-secondary)}
+@media(max-width:900px){.features__grid{grid-template-columns:1fr}}
+
+/* ---- How it works ---- */
+.how{background:linear-gradient(to bottom,var(--bg-app),#0a100e,var(--bg-app))}
+.how .container{text-align:center}
+.how__h2{font-size:clamp(32px,4vw,52px);font-weight:800;letter-spacing:-.035em;color:#fff;margin-bottom:14px}
+.how__sub{font-size:18px;color:var(--text-secondary);margin-bottom:72px;max-width:46ch;margin-left:auto;margin-right:auto}
+.how__steps{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;text-align:center}
+.how__step{display:flex;flex-direction:column;align-items:center;gap:18px}
+.how__num{width:56px;height:56px;border-radius:50%;background:var(--accent-quiet);border:2px solid rgba(70,229,176,.25);display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-weight:700;font-size:22px;color:var(--spore-400);box-shadow:0 0 30px -8px rgba(70,229,176,.35)}
+.how__device{width:220px;height:476px;border-radius:34px;background:#000;box-shadow:0 0 0 8px #0c0f0e,0 0 0 9px #2a302d,0 30px 80px -20px rgba(0,0,0,.8);overflow:hidden;position:relative;margin:8px 0}
+.how__device img{width:100%;height:100%;object-fit:cover}
+.how__device::before{content:'';position:absolute;top:8px;left:50%;transform:translateX(-50%);width:76px;height:22px;background:#000;border-radius:12px;z-index:5}
+.how__step h3{font-size:20px;font-weight:700;color:var(--text-primary);letter-spacing:-.01em}
+.how__step p{font-size:15px;color:var(--text-secondary);line-height:1.5;max-width:28ch}
+.how__img{width:100%;max-width:300px;border-radius:10px;filter:drop-shadow(0 30px 60px rgba(0,0,0,.5));margin:8px 0}
+@media(max-width:900px){.how__steps{grid-template-columns:1fr;gap:56px}}
+
+/* ---- Timeline showcase ---- */
+.timeline-show{position:relative;overflow:hidden}
+.timeline-show__bg{position:absolute;inset:0;background:radial-gradient(60% 40% at 50% 40%,rgba(229,83,61,.06),transparent 70%)}
+.timeline-show .container{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.timeline-show__copy{max-width:480px}
+.timeline-show__eyebrow{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--tox-3);margin-bottom:14px}
+.timeline-show__h2{font-size:clamp(32px,4vw,48px);font-weight:800;letter-spacing:-.035em;color:#fff;margin-bottom:16px;line-height:1.04}
+.timeline-show__p{font-size:17px;line-height:1.6;color:var(--text-secondary);margin-bottom:28px}
+.timeline-show__phases{display:grid;gap:10px}
+.tl-phase{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:var(--radius-md);background:var(--surface-card);border:1px solid var(--border-hairline)}
+.tl-phase__dot{width:10px;height:10px;border-radius:50%;flex:none}
+.tl-phase__win{font-family:var(--font-mono);font-size:13px;color:var(--text-faint);width:60px;flex:none}
+.tl-phase__label{font-size:15px;color:var(--text-body);font-weight:500}
+.timeline-show__visual{display:flex;justify-content:center}
+@media(max-width:900px){.timeline-show .container{grid-template-columns:1fr}.timeline-show__visual{margin-top:40px}}
+
+/* ---- CTA ---- */
+.cta-section{text-align:center;position:relative}
+.cta-section::before{content:'';position:absolute;left:50%;top:0;transform:translateX(-50%);width:600px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(70,229,176,.12),transparent 70%);filter:blur(60px);pointer-events:none}
+.cta-section .container{position:relative}
+.cta__h2{font-size:clamp(36px,5vw,56px);font-weight:800;letter-spacing:-.04em;color:#fff;margin-bottom:16px;line-height:1.04}
+.cta__h2 em{font-style:normal;color:var(--spore-400)}
+.cta__sub{font-size:18px;color:var(--text-secondary);margin-bottom:40px;max-width:42ch;margin-left:auto;margin-right:auto}
+.cta__badges{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap}
+.cta__badge{display:inline-flex;align-items:center;gap:12px;padding:14px 28px;border-radius:var(--radius-md);background:var(--surface-card);border:1px solid var(--border-hairline);box-shadow:var(--shadow-lg);font-weight:700;font-size:17px;color:var(--text-primary);transition:border-color .2s,transform .14s;cursor:pointer}
+.cta__badge:hover{border-color:var(--border-strong);transform:translateY(-2px)}
+.cta__badge:active{transform:scale(.97)}
+.cta__badge svg{width:28px;height:28px;color:var(--text-primary)}
+.cta__disclaimer{font-size:12px;color:var(--text-faint);margin-top:28px;max-width:50ch;margin-left:auto;margin-right:auto;line-height:1.5}
+
+/* ---- Footer ---- */
+.footer{border-top:1px solid var(--border-divider);padding:48px 0 36px}
+.footer .container{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:24px}
+.footer__logo{display:flex;align-items:center;gap:8px;color:var(--spore-500);font-weight:800;font-size:14px;letter-spacing:.16em}
+.footer__logo svg{width:22px;height:22px}
+.footer__logo span{color:#fff}
+.footer__links{display:flex;gap:28px;font-size:14px;color:var(--text-muted)}
+.footer__links a:hover{color:var(--text-secondary)}
+.footer__copy{font-size:13px;color:var(--text-faint);width:100%;text-align:center;margin-top:16px}
+
+/* ---- Animate on scroll ---- */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1)}
+.reveal.visible{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
+</style>
+</head>
+<body>
+
+<!-- ======== NAV ======== -->
+<nav class="nav" id="nav">
+  <div class="container">
+    <a href="#" class="nav__logo">
+      <svg viewBox="0 0 64 64"><g stroke="currentColor" stroke-width="2.6" stroke-linecap="round" opacity=".95"><line x1="32" y1="32" x2="32" y2="9"></line><line x1="32" y1="32" x2="48.3" y2="15.7"></line><line x1="32" y1="32" x2="55" y2="32"></line><line x1="32" y1="32" x2="48.3" y2="48.3"></line><line x1="32" y1="32" x2="32" y2="55"></line><line x1="32" y1="32" x2="15.7" y2="48.3"></line><line x1="32" y1="32" x2="9" y2="32"></line><line x1="32" y1="32" x2="15.7" y2="15.7"></line></g><circle cx="32" cy="32" r="5" fill="currentColor"></circle></svg>
+      <span>SPORE</span> AI
+    </a>
+    <div class="nav__links">
+      <a href="#features">Features</a>
+      <a href="#how">How it works</a>
+      <a href="#timeline">Timeline</a>
+      <a href="https://apps.apple.com/it/app/spore-ai-mushroom-identifier/id6778575370" target="_blank" rel="noopener" class="nav__cta">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><path d="M7 10l5 5 5-5"></path><path d="M12 15V3"></path></svg>
+        Download
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- ======== HERO ======== -->
+<section class="hero">
+  <div class="hero__bg"></div>
+  <div class="container">
+    <div class="hero__copy">
+      <div class="hero__eyebrow">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9.94 14.06A2 2 0 0 0 8.5 12.62L2.4 11.04a.5.5 0 0 1 0-.97L8.5 8.5a2 2 0 0 0 1.44-1.44l1.58-6.1a.5.5 0 0 1 .97 0l1.57 6.1A2 2 0 0 0 15.5 8.5l6.1 1.57a.5.5 0 0 1 0 .97l-6.1 1.58a2 2 0 0 0-1.44 1.44l-1.57 6.1a.5.5 0 0 1-.97 0z"></path></svg>
+        AI-powered safety intelligence
+      </div>
+      <h1 class="hero__h1">Understand the risk.<br><em>Not just the mushroom.</em></h1>
+      <p class="hero__sub">SPORE AI goes beyond identification. Scan any mushroom and get instant toxicity assessment, personalized exposure analysis, and symptom timelines that could save a life.</p>
+      <div class="hero__actions">
+        <a href="https://apps.apple.com/it/app/spore-ai-mushroom-identifier/id6778575370" target="_blank" rel="noopener" class="hero__btn hero__btn--primary">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83"></path><path d="M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11"></path></svg>
+          Download for iOS
+        </a>
+        <a href="#how" class="hero__btn hero__btn--secondary">See how it works</a>
+      </div>
+    </div>
+    <div class="hero__phone">
+      <div class="hero__glow"></div>
+      <img src="assets/screen-home.png" alt="SPORE AI scanner identifying a mushroom" style="width:100%;max-width:380px">
+    </div>
+  </div>
+</section>
+
+<!-- ======== PROOF BAR ======== -->
+<div class="proof">
+  <div class="container">
+    <div class="proof__item"><b>14,000+</b> species in database</div>
+    <div class="proof__item"><b>94%</b> identification accuracy</div>
+    <div class="proof__item"><b>0.3s</b> scan speed</div>
+    <div class="proof__item"><b>5-step</b> toxicity scale</div>
+  </div>
+</div>
+
+<!-- ======== FEATURES ======== -->
+<section class="features section" id="features">
+  <div class="container">
+    <h2 class="features__h2 reveal">Not another mushroom identifier</h2>
+    <p class="features__sub reveal">Every competitor tells you what a mushroom is. SPORE AI tells you what it could do to you.</p>
+    <div class="features__grid">
+      <div class="feature-card reveal">
+        <div class="feature-card__ic" style="background:var(--accent-quiet);color:var(--spore-400)">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"></path><path d="M17 3h2a2 2 0 0 1 2 2v2"></path><path d="M21 17v2a2 2 0 0 1-2 2h-2"></path><path d="M7 21H5a2 2 0 0 1-2-2v-2"></path><circle cx="12" cy="12" r="3.2"></circle></svg>
+        </div>
+        <h3 class="feature-card__h">Instant AI scan</h3>
+        <p class="feature-card__p">Point your camera at any mushroom. Get species identification with confidence scoring in under a second.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-card__ic" style="background:var(--tox-4-soft);color:var(--tox-4)">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></svg>
+        </div>
+        <h3 class="feature-card__h">Toxicity intelligence</h3>
+        <p class="feature-card__p">A 5-step danger scale from Edible to Extremely Toxic — plus detailed toxin profiles, lethal dose data, and look-alike warnings.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-card__ic" style="background:var(--tox-2-soft);color:var(--tox-2)">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"></path></svg>
+        </div>
+        <h3 class="feature-card__h">Exposure assessment</h3>
+        <p class="feature-card__p">Personalized risk scoring based on who was exposed, body weight, and estimated dose. For adults, children, and dogs.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======== HOW IT WORKS ======== -->
+<section class="how section" id="how">
+  <div class="container">
+    <h2 class="how__h2 reveal">Three taps to clarity</h2>
+    <p class="how__sub reveal">From uncertainty to understanding in seconds — not hours of searching.</p>
+    <div class="how__steps">
+      <div class="how__step reveal">
+        <div class="how__num">1</div>
+        <img src="assets/screen-home.png" alt="Scan screen" class="how__img">
+        <h3>Scan</h3>
+        <p>Point your camera at the mushroom. AI identifies the species instantly.</p>
+      </div>
+      <div class="how__step reveal">
+        <div class="how__num">2</div>
+        <img src="assets/screen-result.png" alt="Result screen" class="how__img">
+        <h3>Understand</h3>
+        <p>See toxicity level, confidence score, and dangerous look-alikes.</p>
+      </div>
+      <div class="how__step reveal">
+        <div class="how__num">3</div>
+        <img src="assets/screen-timeline.png" alt="Timeline screen" class="how__img">
+        <h3>Act</h3>
+        <p>See personalized symptom timelines and know exactly what to do.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======== TIMELINE SHOWCASE ======== -->
+<section class="timeline-show section" id="timeline">
+  <div class="timeline-show__bg"></div>
+  <div class="container">
+    <div class="timeline-show__copy reveal">
+      <div class="timeline-show__eyebrow">The signature feature</div>
+      <h2 class="timeline-show__h2">See what may happen next</h2>
+      <p class="timeline-show__p">SPORE AI maps the symptom progression hour by hour — personalized to the species, the subject, and the dose. The most dangerous phase of amatoxin poisoning feels like recovery. We make sure you know that.</p>
+      <div class="timeline-show__phases">
+        <div class="tl-phase"><span class="tl-phase__dot" style="background:var(--tox-0);box-shadow:0 0 8px var(--tox-0)"></span><span class="tl-phase__win">0–6h</span><span class="tl-phase__label">No symptoms — silent absorption</span></div>
+        <div class="tl-phase"><span class="tl-phase__dot" style="background:var(--tox-2);box-shadow:0 0 8px var(--tox-2)"></span><span class="tl-phase__win">6–24h</span><span class="tl-phase__label">Severe GI distress</span></div>
+        <div class="tl-phase"><span class="tl-phase__dot" style="background:var(--tox-1);box-shadow:0 0 8px var(--tox-1)"></span><span class="tl-phase__win">24–48h</span><span class="tl-phase__label">False recovery — the most dangerous phase</span></div>
+        <div class="tl-phase"><span class="tl-phase__dot" style="background:var(--tox-3);box-shadow:0 0 8px var(--tox-3)"></span><span class="tl-phase__win">48–72h</span><span class="tl-phase__label">Organ damage risk</span></div>
+        <div class="tl-phase"><span class="tl-phase__dot" style="background:var(--tox-4);box-shadow:0 0 8px var(--tox-4)"></span><span class="tl-phase__win">72h+</span><span class="tl-phase__label">Emergency intervention required</span></div>
+      </div>
+    </div>
+    <div class="timeline-show__visual reveal">
+      <img src="assets/screen-risk.png" alt="Risk assessment screen" style="width:100%;max-width:360px">
+    </div>
+  </div>
+</section>
+
+<!-- ======== CTA ======== -->
+<section class="cta-section section" id="download">
+  <div class="container">
+    <h2 class="cta__h2 reveal">Knowledge is the<br><em>antidote</em></h2>
+    <p class="cta__sub reveal">Download SPORE AI and turn uncertainty into understanding — before symptoms appear.</p>
+    <div class="cta__badges reveal">
+      <a href="https://apps.apple.com/it/app/spore-ai-mushroom-identifier/id6778575370" target="_blank" rel="noopener" class="cta__badge">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83"></path><path d="M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11"></path></svg>
+        Download for iPhone
+      </a>
+    </div>
+    <p class="cta__disclaimer reveal">SPORE AI is educational and is not a substitute for professional medical or veterinary advice. In an emergency, contact poison control.</p>
+  </div>
+</section>
+
+<!-- ======== FOOTER ======== -->
+<footer class="footer">
+  <div class="container">
+    <a href="#" class="footer__logo">
+      <svg viewBox="0 0 64 64"><g stroke="currentColor" stroke-width="2.6" stroke-linecap="round" opacity=".95"><line x1="32" y1="32" x2="32" y2="9"></line><line x1="32" y1="32" x2="48.3" y2="15.7"></line><line x1="32" y1="32" x2="55" y2="32"></line><line x1="32" y1="32" x2="48.3" y2="48.3"></line><line x1="32" y1="32" x2="32" y2="55"></line><line x1="32" y1="32" x2="15.7" y2="48.3"></line><line x1="32" y1="32" x2="9" y2="32"></line><line x1="32" y1="32" x2="15.7" y2="15.7"></line></g><circle cx="32" cy="32" r="5" fill="currentColor"></circle></svg>
+      <span>SPORE</span> AI
+    </a>
+    <div class="footer__links">
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+      <a href="mailto:valtitech78@gmail.com">Support</a>
+      <a href="mailto:valtitech78@gmail.com">Contact</a>
+    </div>
+    <p class="footer__copy">&copy; 2026 SPORE AI. All rights reserved. Not a medical device.</p>
+  </div>
+</footer>
+
+<!-- ======== SCROLL JS ======== -->
+<script>
+// Nav scroll effect
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('nav--scrolled', window.scrollY > 40);
+}, { passive: true });
+
+// Reveal on scroll
+const reveals = document.querySelectorAll('.reveal');
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+}, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+reveals.forEach(el => io.observe(el));
+
+// Smooth scroll for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const t = document.querySelector(a.getAttribute('href'));
+    if (t) window.scrollTo({ top: t.offsetTop - 80, behavior: 'smooth' });
+  });
+});
+</script>
+</body>
+</html>
